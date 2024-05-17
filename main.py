@@ -336,6 +336,7 @@ def simulate_games(num_games=1000):
         centipawn_losses = engine.play_stock_fish()
         for i in range(min(len(centipawn_losses), max_moves)):
             centipawn_loss_data[game, i] = centipawn_losses[i]
+        engine.visualize_evaluations(max_depth=5, engine='nega')
     
     # Calculate the average centipawn loss per move
     average_centipawn_loss_per_move = np.mean(centipawn_loss_data, axis=0)
@@ -355,6 +356,7 @@ def simulate_games(num_games=1000):
 
 def main():
     engine = EngineAI(chess.STARTING_BOARD_FEN)
+    engine.visualize_evaluations(max_depth=5, engine='nega')
     print(engine.get_best_move(5, 'nega'))
     print(engine.get_best_move(5, 'mini'))
 
