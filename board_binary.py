@@ -129,7 +129,7 @@ class BinaryBoard:
 
     # FEN
 
-    def fen_to_binary_boards(fen: str) -> dict[str, int]:
+    def fen_to_binary_boards(self, fen: str) -> dict[str, int]:
         pieces = 'PNBRQKpnbrqk'
         boards = {piece: 0 for piece in pieces}
 
@@ -420,7 +420,9 @@ class BinaryBoard:
 
 
 def main():
-    pass
+    fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
+    board = BinaryBoard(fen)
+    board.print_board(board.generate_attack_board(BinaryBoard.WHITE))
 
 
 if __name__ == "__main__":

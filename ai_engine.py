@@ -1,6 +1,8 @@
 import random
 import chess
 import chess.engine
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 import torch
 import torch.nn as nn
@@ -8,7 +10,7 @@ import torch.nn as nn
 import numpy as np
 
 from sf_eval_hexboard import StockFishEvalBoard
-from cnn import ChessCNN
+from cnn import ChessCNNs
 from tensorflow.keras.models import load_model
 
 
@@ -235,3 +237,52 @@ class EngineAI:
             i += 1
 
         return centipawn_losses
+
+def visualize_evaluations(self, max_depth, engine='nega'):
+        '''Visualize evaluations for all possible next moves from the current board state.'''
+        current_board = self.board.copy()
+        move_path = []
+        ai_evaluations = []
+        stockfish_evaluations = []
+
+        for _ in range(max_depth):
+            best_move = self.get_best_move(max_depth, engine)
+            if best_move is None:
+                break
+            
+            # AI evaluation
+            self.board.push(best_move)
+            ai_evaluation = self.evaluate_board_CNN(self.board)
+            ai_evaluations.append(ai_evaluation)
+            
+            # Stockfish evaluation
+            stock = StockFishEvalBoard(self.board.fen())
+            stockfish_evaluation = stock.stockfish_evaluation()
+            stockfish_evaluations.append(stockfish_evaluation)
+            
+            # Move path
+            move_path.append(self.board.fen())
+            
+            # Print the board
+            self.print_board_fancy(self.board)
+
+        self.board = current_board
+        
+        # Create a DataFrame for visualization
+        df = pd.DataFrame({
+            'Move Number': range(1, len(move_path) + 1),
+            'AI Evaluation': ai_evaluations,
+            'Stockfish Evaluation': stockfish_evaluations
+        })
+
+        # Plotting the evaluations
+        plt.figure(figsize=(14, 7))
+        sns.lineplot(x='Move Number', y='AI Evaluation', data=df, marker='o', label='AI Evaluation', color='blue')
+        sns.lineplot(x='Move Number', y='Stockfish Evaluation', data=df, marker='o', label='Stockfish Evaluation', color='red')
+
+        plt.title('AI Evaluation vs Stockfish Evaluation of Path of Moves')
+        plt.xlabel('Move Number')
+        plt.ylabel('Evaluation (Centipawn Score)')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
