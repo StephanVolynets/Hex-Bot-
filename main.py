@@ -64,9 +64,12 @@ def simulate_games(num_games=5):
 def main():
     # engine = EngineAI(chess.STARTING_BOARD_FEN)
     # print(engine.get_best_move(5, 'nega'))
-    # print(engine.get_best_move(5, 'mini'))
+    # print(engine.get_best_move(5, 'mini'))\
+    engine = EngineAI(chess.STARTING_BOARD_FEN)
 
-    simulate_games()
+    engine.play_stock_fish()
+
+    #simulate_games()
     # board2 = Board(test_en_passant().board, Board.BLACK, en_passant_square_fen=41)
     # board2.print_board_hex()
 
@@ -136,65 +139,6 @@ def main():
     # score = stockfish_evaluation(engine_path, fen2)
     # print(score)
 
-
-def play_game(board):
-    legal_moves = board.generate_all_possible_next_board_states()
-
-    best_move = None
-    best_score = -9999
-
-    # for move in legal_moves:
-
-    # gameover = False
-    current_state = board.generate_all_possible_next_board_states()
-    # while i < max_moves and not gameover:
-    #     board = random.choice(current_state)
-    #     # chosen.print_board_hex()
-    #     # chosen.print_board_hex(chosen.attack_board)
-
-    #     current_state = board.generate_all_possible_next_board_states()
-    #     i += 1
-
-    # board.print_board_hex()
-
-
-class ChessEnv:
-    PIECE_VALUES = {
-        'P': 1,  # Pawn
-        'N': 3,  # Knight
-        'B': 3,  # Bishop
-        'R': 5,  # Rook
-        'Q': 9,  # Queen
-        'K': 0   # King (usually not counted for intermediate rewards)
-    }
-
-    def __init__(self, ):
-        self.board = init_position()
-        self.next_states = self.board.generate_all_possible_next_board_states()
-
-    def init_board(self):
-        return HexBoard(init_position(), HexBoard.BLACK)
-
-    def next_states(self):
-        return self.board.generate_all_possible_next_board_states()
-
-    def apply_move(self):
-        return
-
-    def get_reward(self):
-        if self.is_game_over():
-            if self.is_checkmate():
-                return 1 if self.turn == self.WHITE else -1
-            elif self.is_draw():
-                return 0
-        return self.material_balance()
-
-    def material_balance(self):
-        white_material = sum(self.PIECE_VALUES[piece]
-                             for piece in self.get_pieces(self.WHITE))
-        black_material = sum(self.PIECE_VALUES[piece]
-                             for piece in self.get_pieces(self.BLACK))
-        return white_material - black_material
 
 
 if __name__ == "__main__":
